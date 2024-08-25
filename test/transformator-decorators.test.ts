@@ -14,7 +14,7 @@ class InclusionEntity {
 
   public location?: string;
   public age?: number;
-  
+
   constructor(name: string) {
     this.name = name;
   }
@@ -27,11 +27,11 @@ class InclusionEntityChild extends InclusionEntity {
 }
 
 describe(`test class decorators`, () => {
-  test('With property inclusion mapping', () => {
-    const entity = new InclusionEntity('Lerto');
-    entity.location = 'Mars';
+  test("With property inclusion mapping", () => {
+    const entity = new InclusionEntity("Lerto");
+    entity.location = "Mars";
     entity.age = 241;
-    
+
     const entityDuplicate = Objectra.duplicate(entity);
 
     expect(entityDuplicate).not.toBe(entity);
@@ -44,11 +44,11 @@ describe(`test class decorators`, () => {
     expect(entityDuplicate.internalId).not.toBe(entity.internalId);
   });
 
-  test('With inherited object inclusion mapping', () => {
-    const entity = new InclusionEntityChild('C5P');
-    entity.location = 'Pluto';
+  test("With inherited object inclusion mapping", () => {
+    const entity = new InclusionEntityChild("C5P");
+    entity.location = "Pluto";
     entity.age = 142;
-    
+
     const entityDuplicate = Objectra.duplicate(entity);
 
     expect(entityDuplicate).not.toBe(entity);

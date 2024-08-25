@@ -1,14 +1,16 @@
 import { Objectra, Transformator } from "../src";
 
-describe('test custom transformer handling', () => {
-  test('vector transformation', () => {
-    const sepSymbol = ':';
+describe("test custom transformer handling", () => {
+  test("vector transformation", () => {
+    const sepSymbol = ":";
     @Transformator.Register({
       serializator: (bridge) => {
         return `${bridge.instance[0]}${sepSymbol}${bridge.instance[1]}`;
       },
       instantiator: (bridge) => {
-        const flatVector = bridge.getRepresenterValue(bridge.representer) as string;
+        const flatVector = bridge.getRepresenterValue(
+          bridge.representer,
+        ) as string;
         const [x, y] = flatVector.split(sepSymbol).map(Number);
         return new Vector(x, y);
       },
@@ -25,14 +27,14 @@ describe('test custom transformer handling', () => {
 
     const vector = new Vector(23.342, 12.1232124);
     const vectorDuplicate = Objectra.duplicate(vector);
-    
+
     expect(vectorDuplicate).not.toBe(vector);
     expect(vectorDuplicate[0]).toBe(vector[0]);
     expect(vectorDuplicate[1]).toBe(vector[1]);
   });
 
-  test('named transformation', () => {
-    Transformator.register('nametest').configure({
+  test("named transformation", () => {
+    Transformator.register("nametest").configure({
       serializator: (bridge) => {
         const { instance } = bridge;
         const res = instance.a + instance.b + instance.c;
@@ -43,21 +45,21 @@ describe('test custom transformer handling', () => {
         return {
           composed: value,
         };
-      }
+      },
     });
 
     const myObject = {
-      a: 'abc',
-      b: 'def',
-      c: '123'
+      a: "abc",
+      b: "def",
+      c: "123",
     };
 
     const myObjectDuplicate = Objectra.duplicate<any>(myObject, {
-      altMapping: [
-        [myObject, 'nametest'],
-      ],
+      altMapping: [[myObject, "nametest"]],
     });
 
-    expect(myObjectDuplicate.composed).toBe(myObject.a + myObject.b + myObject.c);
-  })
+    expect(myObjectDuplicate.composed).toBe(
+      myObject.a + myObject.b + myObject.c,
+    );
+  });
 });

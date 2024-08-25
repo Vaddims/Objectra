@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es6",                                                
-    "module": "commonjs",                                
-    "declaration": true,                              
-    "declarationMap": true,                           
-    "sourceMap": true,                                
-    "downlevelIteration": true,                       
-    "esModuleInterop": true,                             
-    "forceConsistentCasingInFileNames": true,            
-    "strict": true,                                      
-    "skipLibCheck": true,   
+    "target": "es6",
+    "module": "commonjs",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
     "noImplicitThis": false,
-    "useDefineForClassFields": true,
-  },
+    "useDefineForClassFields": true
+  }
 }

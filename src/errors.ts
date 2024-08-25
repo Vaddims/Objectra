@@ -12,11 +12,15 @@ class TransformationError extends Error {
 
   constructor(message: string, options?: TransformatorErrorOptions) {
     const possibleSolutionStructure = options?.solution ?? [];
-    const possibleSolutions = typeof possibleSolutionStructure === 'string' 
-    ? [possibleSolutionStructure] 
-    : possibleSolutionStructure;
+    const possibleSolutions =
+      typeof possibleSolutionStructure === "string"
+        ? [possibleSolutionStructure]
+        : possibleSolutionStructure;
 
-    const composedMessage = TransformationError.composeMessage(message, possibleSolutions);
+    const composedMessage = TransformationError.composeMessage(
+      message,
+      possibleSolutions,
+    );
     super(composedMessage);
 
     this.name = this.constructor.name;
@@ -30,7 +34,7 @@ class TransformationError extends Error {
     let composedMessage = message;
 
     if (solutions.length > 0) {
-      composedMessage += `. Possible solution${solutions.length > 1 ? 's' : ''}:`;
+      composedMessage += `. Possible solution${solutions.length > 1 ? "s" : ""}:`;
     }
 
     for (let i = 0; i < solutions.length; i++) {
@@ -56,7 +60,9 @@ export class InternalError extends TransformationError {
 export namespace InternalError {
   export class ConsumerIdMissingError extends InternalError {
     constructor() {
-      super(`Instance was not registered as reference and no reference id was found`);
+      super(
+        `Instance was not registered as reference and no reference id was found`,
+      );
     }
   }
 }
@@ -65,15 +71,20 @@ export class ObjectraError extends TransformationError {}
 export namespace ObjectraError {
   export class ForeignBackloopReferenceError extends ObjectraError {
     constructor(cause?: unknown) {
-      super(`The backloop reference resolver got a reference that does not belong to the origin backloop tree`, {
-        cause,
-      });
+      super(
+        `The backloop reference resolver got a reference that does not belong to the origin backloop tree`,
+        {
+          cause,
+        },
+      );
     }
   }
 
   export class CompositionError extends ObjectraError {
     constructor(identifier?: Objectra.Identifier | undefined, cause?: unknown) {
-      const typeName = identifier ? Transformator.typeToString(identifier) : null;
+      const typeName = identifier
+        ? Transformator.typeToString(identifier)
+        : null;
       const objectraName = typeName ? `Objectra ${typeName}` : `Objectra`;
 
       const solutions: string[] = [];
@@ -83,9 +94,7 @@ export namespace ObjectraError {
 
       super(`${objectraName} could not compose into an instance`, {
         cause,
-        solution: [
-          ...solutions,
-        ]
+        solution: [...solutions],
       });
     }
   }
@@ -95,8 +104,8 @@ export namespace ObjectraError {
       super(`Invalid reference injection path.`, {
         solution: [
           `Make sure to correctly apply (pathKey)s in custom intantiators`,
-        ]
-      })
+        ],
+      });
     }
   }
 
@@ -109,7 +118,8 @@ export namespace ObjectraError {
 
 export class TransformatorError extends TransformationError {}
 export namespace TransformatorError {
-  const noOptionalRegistrationsMessage = 'Make sure the registration is guaranteed to be defined and is not inside of statements';
+  const noOptionalRegistrationsMessage =
+    "Make sure the registration is guaranteed to be defined and is not inside of statements";
   export class TransformatorMissingError extends TransformatorError {
     constructor(identifier: Objectra.Identifier) {
       const typeName = Transformator.typeToString(identifier);
@@ -145,21 +155,16 @@ export namespace TransformatorError {
     constructor(identifier: Objectra.Identifier) {
       const typeName = Transformator.typeToString(identifier);
       super(`Transformator config already sealed`, {
-        solution: [
-          `Add all config options at the initial registration`,
-        ]
+        solution: [`Add all config options at the initial registration`],
       });
     }
   }
-
 
   export class TransformatorSerializatorMissingError extends TransformatorError {
     constructor(identifier: Objectra.Identifier) {
       const typeName = Transformator.typeToString(identifier);
       super(`Transformator (${typeName}) does not have a serializer`, {
-        solution: [
-          `Add a serializer function in the registration options`,
-        ]
+        solution: [`Add a serializer function in the registration options`],
       });
     }
   }
@@ -168,9 +173,7 @@ export namespace TransformatorError {
     constructor(identifier: Objectra.Identifier) {
       const typeName = Transformator.typeToString(identifier);
       super(`Transformator (${typeName}) does not have an instantiator`, {
-        solution: [
-          `Add an instantiator function in the registration options`,
-        ]
+        solution: [`Add an instantiator function in the registration options`],
       });
     }
   }
@@ -185,62 +188,77 @@ export namespace TransformatorError {
           `Make sure the right data is passed to the constructor`,
           `Create a custom instantiator function to handle the instantiation`,
         ],
-      })
+      });
     }
   }
 
   export class InvalidConstructorArgumentQuantityError extends TransformationError {
     constructor(identifier: Objectra.Identifier) {
       const typeName = Transformator.typeToString(identifier);
-      const identifierConstructorArgumentQuantity = typeof identifier === 'string' ? null : identifier.length;
+      const identifierConstructorArgumentQuantity =
+        typeof identifier === "string" ? null : identifier.length;
 
       const solutions: string[] = [
         `Create a custom instantiator function to handle the instantiation`,
       ];
 
       if (identifierConstructorArgumentQuantity !== null) {
-        solutions.unshift(`Define the correct quantity of arguments. Infered quantity: ${identifierConstructorArgumentQuantity} or less`);
+        solutions.unshift(
+          `Define the correct quantity of arguments. Infered quantity: ${identifierConstructorArgumentQuantity} or less`,
+        );
       }
 
-      super(`Transformator (${typeName}) has invalid constructor argument quantity`, {
-        solution: solutions,
-      });
+      super(
+        `Transformator (${typeName}) has invalid constructor argument quantity`,
+        {
+          solution: solutions,
+        },
+      );
     }
   }
 
   export class TransformatorSelfSerializationError extends TransformationError {
     constructor(identifier: Objectra.Identifier, cause?: Error) {
       const typeName = Transformator.typeToString(identifier);
-      super(`Transformator (${typeName}) transformer (serializator function) propably does not decompose its value properly`, {
-        cause,
-        solution: [
-          `Refactor the serializator function to decompose its instance and then serialize the contents`
-        ],
-      })
+      super(
+        `Transformator (${typeName}) transformer (serializator function) propably does not decompose its value properly`,
+        {
+          cause,
+          solution: [
+            `Refactor the serializator function to decompose its instance and then serialize the contents`,
+          ],
+        },
+      );
     }
   }
 
   export class TransformatorSelfInstantiationError extends TransformationError {
     constructor(identifier: Objectra.Identifier, cause?: Error) {
       const typeName = Transformator.typeToString(identifier);
-      super(`Transformator (${typeName}) transformer (instantiator function) propably does not compose its value properly`, {
-        cause,
-        solution: [
-          `Refactor the instantiator function to compose its instance manualy instead of explicitly instantiating it with the bridge`
-        ],
-      })
+      super(
+        `Transformator (${typeName}) transformer (instantiator function) propably does not compose its value properly`,
+        {
+          cause,
+          solution: [
+            `Refactor the instantiator function to compose its instance manualy instead of explicitly instantiating it with the bridge`,
+          ],
+        },
+      );
     }
   }
 
   export class ConstructorArgumentIndexDuplicationError extends TransformationError {
     constructor(identifier: Objectra.Identifier, index: number) {
       const typeName = Transformator.typeToString(identifier);
-      super(`Transformator (${typeName}) constructor argument for at index (${index}) already setted`, {
-        solution: [
-          `Make sure constructor argument index don't repeat`,
-          `Create a custom serializator and instantiator function to handle the transformation process`,
-        ]
-      });
+      super(
+        `Transformator (${typeName}) constructor argument for at index (${index}) already setted`,
+        {
+          solution: [
+            `Make sure constructor argument index don't repeat`,
+            `Create a custom serializator and instantiator function to handle the transformation process`,
+          ],
+        },
+      );
     }
   }
 
@@ -253,7 +271,9 @@ export namespace TransformatorError {
 
   export class SymbolRegistrationMissingError extends TransformationError {
     constructor(symbol: symbol | string) {
-      super(`Symbol (${typeof symbol === 'string' ? symbol : symbol.description}) not found`);
+      super(
+        `Symbol (${typeof symbol === "string" ? symbol : symbol.description}) not found`,
+      );
     }
   }
 }

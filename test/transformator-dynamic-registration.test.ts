@@ -12,8 +12,8 @@ class UnlistedChild extends ListedParent {
   isChild = true;
 }
 
-describe('test transformator dynamic setup', () => {
-  test('test unlisted class', () => {
+describe("test transformator dynamic setup", () => {
+  test("test unlisted class", () => {
     const unlistedChildInstance = new UnlistedChild();
     unlistedChildInstance.isParent = false;
 
@@ -21,7 +21,9 @@ describe('test transformator dynamic setup', () => {
 
     expect(unlistedChildDuplicate).not.toBe(unlistedChildInstance);
     expect(unlistedChildInstance.isChild).toBe(unlistedChildDuplicate.isChild);
-    expect(unlistedChildInstance.isParent).toBe(unlistedChildDuplicate.isParent);
+    expect(unlistedChildInstance.isParent).toBe(
+      unlistedChildDuplicate.isParent,
+    );
     expect(unlistedChildInstance.seed).not.toBe(unlistedChildDuplicate.seed);
   });
 });

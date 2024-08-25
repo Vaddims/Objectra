@@ -2,7 +2,10 @@ import type { Objectra } from ".";
 import { Constructor } from "./types/util.types";
 
 export class ObjectraCluster {
-  private readonly objectraDescriptorMap: Map<Objectra, ObjectraCluster.Entry.Descriptor>;
+  private readonly objectraDescriptorMap: Map<
+    Objectra,
+    ObjectraCluster.Entry.Descriptor
+  >;
 
   constructor(iterable?: Iterable<ObjectraCluster.Entry>) {
     if (!iterable) {
@@ -38,35 +41,40 @@ export class ObjectraCluster {
   }
 
   public endpoints() {
-    return this.filter(objectra => objectra.isStructureEndpoint);
+    return this.filter((objectra) => objectra.isStructureEndpoint);
   }
 
   public declarations() {
-    return this.filter(objectra => objectra.isDeclaration);
+    return this.filter((objectra) => objectra.isDeclaration);
   }
 
   public referenceDeclarations() {
-    return this.filter(objectra => objectra.isReferenceDeclaration);
+    return this.filter((objectra) => objectra.isReferenceDeclaration);
   }
 
   public structureDeclaration() {
-    return this.filter(objectra => objectra.isStructureDeclaration);
+    return this.filter((objectra) => objectra.isStructureDeclaration);
   }
 
   public referenceConsumers() {
-    return this.filter(objectra => objectra.isReferenceConsumer);
+    return this.filter((objectra) => objectra.isReferenceConsumer);
   }
 
   public instancesOf(constructor: Constructor) {
-    return this.filter(objectra => objectra.contentIsInstanceOf(constructor));
+    return this.filter((objectra) => objectra.contentIsInstanceOf(constructor));
   }
 
   public primitiveValue(primitive: string | number | boolean) {
-    return this.filter(objectra => objectra['content'] === primitive);
+    return this.filter((objectra) => objectra["content"] === primitive);
   }
 
-  private filter(filter: (objectra: Objectra, descriptor: ObjectraCluster.Entry.Descriptor) => boolean) {
-    for (const [ objectra, descriptor ] of this.objectraDescriptorMap) {
+  private filter(
+    filter: (
+      objectra: Objectra,
+      descriptor: ObjectraCluster.Entry.Descriptor,
+    ) => boolean,
+  ) {
+    for (const [objectra, descriptor] of this.objectraDescriptorMap) {
       if (!filter(objectra, descriptor)) {
         this.objectraDescriptorMap.delete(objectra);
       }
